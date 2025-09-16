@@ -38,6 +38,21 @@ class _EmojiDrawingScreenState extends State<EmojiDrawingScreen> {
     'Winking Face',
   ];
 
+  Color _getEmojiColor(String emoji) {
+    switch (emoji) {
+      case 'Smiley Face':
+        return Colors.yellow;
+      case 'Party Face':
+        return Colors.purple;
+      case 'Heart':
+        return Colors.red;
+      case 'Winking Face':
+        return Colors.orange;
+      default:
+        return Colors.blue;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -98,11 +113,11 @@ class _EmojiDrawingScreenState extends State<EmojiDrawingScreen> {
               margin: const EdgeInsets.all(20),
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.9),
+                color: Colors.white.withValues(alpha: 0.9),
                 borderRadius: BorderRadius.circular(15),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
+                    color: Colors.black.withValues(alpha: 0.1),
                     blurRadius: 10,
                     offset: const Offset(0, 5),
                   ),
@@ -119,48 +134,75 @@ class _EmojiDrawingScreenState extends State<EmojiDrawingScreen> {
                       color: Colors.deepPurple,
                     ),
                   ),
-                  const SizedBox(height: 10),
-                  Wrap(
-                    spacing: 10,
-                    runSpacing: 10,
-                    children: emojiOptions.map((emoji) {
-                      final isSelected = selectedEmoji == emoji;
-                      return GestureDetector(
-                        onTap: () {
+                  const SizedBox(height: 15),
+                  Container(
+                    width: double.infinity,
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: [Colors.purple, Colors.blue],
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                      ),
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.1),
+                          blurRadius: 5,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton<String>(
+                        value: selectedEmoji,
+                        dropdownColor: Colors.white,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        icon: const Icon(
+                          Icons.arrow_drop_down,
+                          color: Colors.white,
+                          size: 28,
+                        ),
+                        items: emojiOptions.map((String emoji) {
+                          return DropdownMenuItem<String>(
+                            value: emoji,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    width: 8,
+                                    height: 8,
+                                    decoration: BoxDecoration(
+                                      color: _getEmojiColor(emoji),
+                                      shape: BoxShape.circle,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Text(
+                                    emoji,
+                                    style: const TextStyle(
+                                      color: Colors.black87,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                        onChanged: (String? newValue) {
                           setState(() {
-                            selectedEmoji = emoji;
+                            selectedEmoji = newValue!;
                           });
                         },
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 8,
-                          ),
-                          decoration: BoxDecoration(
-                            gradient: isSelected
-                                ? const LinearGradient(
-                                    colors: [Colors.purple, Colors.blue],
-                                  )
-                                : null,
-                            color: isSelected ? null : Colors.grey[200],
-                            borderRadius: BorderRadius.circular(20),
-                            border: Border.all(
-                              color:
-                                  isSelected ? Colors.transparent : Colors.grey,
-                            ),
-                          ),
-                          child: Text(
-                            emoji,
-                            style: TextStyle(
-                              color: isSelected ? Colors.white : Colors.black87,
-                              fontWeight: isSelected
-                                  ? FontWeight.bold
-                                  : FontWeight.normal,
-                            ),
-                          ),
-                        ),
-                      );
-                    }).toList(),
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -175,7 +217,7 @@ class _EmojiDrawingScreenState extends State<EmojiDrawingScreen> {
                   borderRadius: BorderRadius.circular(15),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
+                      color: Colors.black.withValues(alpha: 0.1),
                       blurRadius: 10,
                       offset: const Offset(0, 5),
                     ),
@@ -379,7 +421,7 @@ class EmojiPainter extends CustomPainter {
     );
 
     // Draw confetti
-    final confettiColors = [
+    const confettiColors = [
       Colors.red,
       Colors.blue,
       Colors.green,
@@ -500,7 +542,7 @@ class EmojiPainter extends CustomPainter {
     canvas.drawPath(
       shinePath,
       Paint()
-        ..color = Colors.white.withOpacity(0.6)
+        ..color = Colors.white.withValues(alpha: 0.6)
         ..style = PaintingStyle.fill,
     );
   }
