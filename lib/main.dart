@@ -11,7 +11,7 @@ class InteractiveEmojiApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Interactive Emoji Drawing',
+      title: 'Choose Your Emoji!',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         useMaterial3: true,
